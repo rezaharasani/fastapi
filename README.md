@@ -1,16 +1,16 @@
 ## PANDA (FastAPI Based Project):
 
-This project is my first python and fastapi program that consists of following technology stack:
-	✓	Python  
-	✓	Docker  
-	✓	Postman  
-	✓	FastAPI  
-	✓	PostgreSQL  
-	✓	Pydantic  
-	✓	SQLAlchemy  
-	✓	Psycopg2  
-	✓	Unittest  
-
+This project is my first python and fastapi program that consists of following technology stack:  
+✓ Python  
+✓ Docker  
+✓ Postman  
+✓ FastAPI  
+✓ PostgreSQL  
+✓ Pydantic  
+✓ SQLAlchemy  
+✓ Psycopg2  
+✓ Unittest
+✓ Alembic
 
 The final result of this project represents as following image (Swagger Style):
 
