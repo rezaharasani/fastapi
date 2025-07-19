@@ -1,1 +1,1 @@
-SELECT * FROM posts ORDER BY id ASC;
+SELECT * FROM users;

@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import status, Response, HTTPException, Depends, APIRouter
+from fastapi import status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
 from .. import models, schemas, utils, oauth2
 from ..database import get_db
@@ -40,11 +40,10 @@ def get_user_by_id(user_id: int, db: Session = Depends(get_db),
              status_code=status.HTTP_201_CREATED,
              response_model=schemas.UserOut
              )
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db),
-                current_user: int = Depends(oauth2.get_current_user)
+def create_user(user: schemas.UserCreate,
+                db: Session = Depends(get_db)
                 ):
     """Create new user into database"""
-    print(" ************ Creating new user")
     hashed_password = utils.hash_password(user.password)
     user.password = hashed_password
 
