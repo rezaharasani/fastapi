@@ -300,4 +300,5 @@ pyrightconfig.json
 pyvenv.cfg
 pip-selfcheck.json
 
-# End of https://www.toptal.com/developers/gitignore/api/pycharm,python,virtualenv
+# project extra files and folders
+data/
