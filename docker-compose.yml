@@ -1,0 +1,19 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: fastapi
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5434:5432"
+    restart: always
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    networks:
+      - metanet1
+
+networks:
+  metanet1:
+    driver: bridge
