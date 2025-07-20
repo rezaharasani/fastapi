@@ -1,0 +1,43 @@
+
+(.venv) reza@Rezas-MacBook-Pro configuration % alembic init  alembic                    
+Creating directory /Users/reza/Projects/GitHub/configuration/alembic ...  done
+Creating directory /Users/reza/Projects/GitHub/configuration/alembic/versions ...  done
+Generating /Users/reza/Projects/GitHub/configuration/alembic/script.py.mako ...  done
+Generating /Users/reza/Projects/GitHub/configuration/alembic/env.py ...  done
+Generating /Users/reza/Projects/GitHub/configuration/alembic/README ...  done
+Generating /Users/reza/Projects/GitHub/configuration/alembic.ini ...  done
+Please edit configuration/connection/logging settings in /Users/reza/Projects/GitHub/configuration/alembic.ini
+before proceeding.
+
+
+(.venv) reza@Rezas-MacBook-Pro configuration % alembic revision -m "create account table"
+Generating /Users/reza/Projects/GitHub/configuration/alembic/versions/0e8d60b06dee_create_account_table.py ...  done
+
+
+(.venv) reza@Rezas-MacBook-Pro configuration % alembic upgrade 0e8d60b06dee
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0e8d60b06dee, create account table
+
+
+(.venv) reza@Rezas-MacBook-Pro configuration % alembic revision -m "Add a column to account table"
+  Generating
+  /Users/reza/Projects/GitHub/configuration/alembic/versions/e8d730325d73_add_a_column_to_account_table.py ...  done
+
+
+  (.venv) reza@Rezas-MacBook-Pro configuration % alembic current
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+0e8d60b06dee
+
+
+(.venv) reza@Rezas-MacBook-Pro configuration % alembic upgrade head
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade 0e8d60b06dee -> e8d730325d73, Add a column to account table
+
+
+(.venv) reza@Rezas-MacBook-Pro configuration % alembic downgrade 0e8d60b06dee
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running downgrade e8d730325d73 -> 0e8d60b06dee, Add a column to account table
