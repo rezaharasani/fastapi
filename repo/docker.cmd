@@ -1,6 +1,6 @@
 
 @REM Docker Commands:
-# docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=secret --name postgres postgres
+# docker run -d -p 5434:5432 -e POSTGRES_PASSWORD=secret --name postgres postgres
 # ========================================================================================
 # docker exec -it postgres createdb -U postgres fastapi
 # ========================================================================================
