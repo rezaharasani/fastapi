@@ -6,9 +6,9 @@ from .routers import user, post, auth, vote
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="PANDA",
+    title="FastAPI",
     description="Python and FastAPI Project",
-    version="v0.1.0",
+    version="v0.2.0",
     docs_url="/docs",
     redoc_url="/redoc",
     deprecated=False
