@@ -1,11 +1,14 @@
 from datetime import datetime
-from typing import Optional
-from pydantic import BaseModel, EmailStr, conint
+from typing import Optional, Annotated
+from pydantic import BaseModel, EmailStr, conint, BeforeValidator, Field
+
+from app import utils
 
 
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
+    phone_number: str = Field(min_length=11, max_length=11)
 
 
 class UserLogin(BaseModel):
@@ -17,6 +20,7 @@ class UserOut(BaseModel):
     id: int
     email: EmailStr
     created_at: datetime
+    phone_number: Annotated[str, BeforeValidator(utils.reformat_phone_number)]
 
     class Config:
         from_attributes = True
