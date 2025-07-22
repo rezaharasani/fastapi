@@ -1,9 +1,13 @@
 from fastapi import FastAPI
-from . import models
-from .database import engine
 from .routers import user, post, auth, vote
 
-models.Base.metadata.create_all(bind=engine)
+""" Notice:
+Our database will be created automatically by alembic.
+The following method is used to initialize database by manual way."""
+# from . import models
+# from .database import engine
+# models.Base.metadata.create_all(bind=engine)
+
 
 app = FastAPI(
     title="FastAPI",
@@ -11,6 +15,7 @@ app = FastAPI(
     version="v0.2.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    root_path="/api/v1",
     deprecated=False
 )
 
