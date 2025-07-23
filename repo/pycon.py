@@ -11,11 +11,11 @@ logging.basicConfig(format=FORMAT)
 logger.setLevel(logging.INFO)
 
 conn = psycopg2.connect(
-    host="localhost",
-    database="pgloc_db",
+    host="127.0.0.1",
+    database="fastapi",
     user="postgres",
-    port="5433",
-    password="secret",
+    port="5434",
+    password="password123",
     cursor_factory=RealDictCursor,
 )
 
