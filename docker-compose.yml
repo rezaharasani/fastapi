@@ -8,30 +8,30 @@ services:
       POSTGRES_USER: ${DATABASE_USERNAME}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     ports:
-      - "5434:5432"
+      - "${DATABASE_PORT}:5432"
     restart: always
     volumes:
       - ./data:/var/lib/postgresql/data
-    networks:
-      - metanet1
+#    networks:
+#      - metanet1
 
-  traefik:
-    image: traefik:v3.4.4
-    command:
-      - "--api.insecure=true"
-      - "--api.dashboard=true"
-      - "--providers.docker=true"
-      - "--entrypoints.web.address=:80"
-      - "--providers.docker.exposedbydefault=false"
-    ports:
-      - "80:80"
-      - "8080:8080"
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - metanet1
+#  traefik:
+#    image: traefik:v3.4.4
+#    command:
+#      - "--api.insecure=true"
+#      - "--api.dashboard=true"
+#      - "--providers.docker=true"
+#      - "--entrypoints.web.address=:80"
+#      - "--providers.docker.exposedbydefault=false"
+#    ports:
+#      - "80:80"
+#      - "8080:8080"
+#    restart: always
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    networks:
+#      - metanet1
 
-networks:
-  metanet1:
-    driver: bridge
+#networks:
+#  metanet1:
+#    driver: bridge
