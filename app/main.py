@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from .routers import user, post, auth, vote
+from fastapi.middleware.cors import CORSMiddleware
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 """ Notice:
 Our database will be created automatically by alembic.
@@ -10,13 +12,22 @@ The following method is used to initialize database by manual way."""
 
 
 app = FastAPI(
-    title="FastAPI",
+    title="Development FastAPI",
     description="Python and FastAPI Project",
     version="v0.2.0",
     docs_url="/docs",
     redoc_url="/redoc",
     root_path="/api/v1",
     deprecated=False
+)
+FastAPIInstrumentor.instrument_app(app)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    allow_credentials=True
 )
 
 app.include_router(user.router)
