@@ -1,13 +1,10 @@
-.env
+.env.sample
 Dockerfile
 .dockerignore
 .pytest_cache
 .gitignore
-Procfile
 nginx
 gunicorn.service
-__pycache__
 .venv/
-repo/
-compose/
-data/
+LICENSE
+README.md
