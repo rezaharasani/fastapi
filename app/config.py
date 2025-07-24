@@ -2,15 +2,20 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    DATABASE_HOSTNAME: str
-    DATABASE_PORT: str
-    DATABASE_PASSWORD: str
-    DATABASE_NAME: str
-    DATABASE_USERNAME: str
+    POSTGRES_SERVER: str = 'localhost'
+    POSTGRES_PORT: str = '5432'
+    POSTGRES_OUT_PORT: str = '5432'
+    POSTGRES_DB: str = 'postgres'
+    POSTGRES_USER: str = 'postgres'
+    POSTGRES_PASSWORD: str
 
     SECRET_KEY: str
     ALGORITHM: str
-    ACCESS_TOKEN_EXPIRE_MINUTES: int
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+
+    PROJECT_VERSION: str = 'Testing'
+
+    NGINX_PORT: str = '80'
 
     class Config:
         case_sensitive = False
