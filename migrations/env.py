@@ -14,8 +14,8 @@ config = context.config
 config.set_main_option(
     "sqlalchemy.url",
     f"postgresql+psycopg2://"
-    f"{se.DATABASE_USERNAME}:{se.DATABASE_PASSWORD}@"
-    f"{se.DATABASE_HOSTNAME}:{se.DATABASE_PORT}/{se.DATABASE_NAME}"
+    f"{se.POSTGRES_USER}:{se.POSTGRES_PASSWORD}@"
+    f"{se.POSTGRES_SERVER}:{se.POSTGRES_PORT}/{se.POSTGRES_DB}"
 )
 
 target_metadata = Base.metadata

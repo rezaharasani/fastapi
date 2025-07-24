@@ -1,10 +1,12 @@
-.env.sample
 Dockerfile
+docker-compose.yml
+.env.sample
 .dockerignore
 .pytest_cache
 .gitignore
 nginx
-gunicorn.service
 .venv/
+migrations
+alembic.ini
 LICENSE
 README.md
