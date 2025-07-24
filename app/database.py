@@ -4,8 +4,11 @@ from .config import settings
 
 SQLALCHEMY_DATABASE_URL = \
     (f"postgresql://"
-     f"{settings.DATABASE_USERNAME}:{settings.DATABASE_PASSWORD}"
-     f"@{settings.DATABASE_HOSTNAME}:{settings.DATABASE_PORT}/{settings.DATABASE_NAME}")
+     f"{settings.POSTGRES_USER}:"
+     f"{settings.POSTGRES_PASSWORD}@"
+     f"{settings.POSTGRES_SERVER}:"
+     f"{settings.POSTGRES_PORT}/"
+     f"{settings.POSTGRES_DB}")
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
