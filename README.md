@@ -3,20 +3,21 @@
 This project is my first python and fastapi program that consists of following technology stack:  
 ✓ Python  
 ✓ Docker  
+✓ Docker Compose
 ✓ Postman  
 ✓ FastAPI  
 ✓ PostgreSQL  
 ✓ Pydantic  
 ✓ SQLAlchemy  
-✓ Psycopg2  
-✓ Unittest  
+✓ Psycopg2    
 ✓ Alembic  
 ✓ Git  
-✓ Heroku  
+✓ Nginx  
 
 The final result of this project represents as following image (Swagger Style):
 
-<img width="1269" height="689" alt="Screenshot 2025-07-15 at 17 27 25" src="https://github.com/user-attachments/assets/557c655a-9661-4eb3-8df0-75921688cefa" />
+<img width="1044" height="2028" alt="Project Entire Image" src="https://github.com/user-attachments/assets/fb0b47b0-6bff-4771-b89c-5a117e716f08" />
+
 
 ### Project structure:  
 ```bazaar
