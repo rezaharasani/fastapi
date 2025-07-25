@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
     PROJECT_VERSION: str = 'Testing'
+    ENVIRONMENT: str = 'Development'
 
     NGINX_PORT: str = '80'
 
