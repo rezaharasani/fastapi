@@ -13,7 +13,7 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="FastAPI",
-    description="Python and FastAPI Project",
+    description=f"Python and FastAPI Project in {settings.ENVIRONMENT.title()} Mode",
     version=f"{settings.PROJECT_VERSION}",
     docs_url="/docs",
     redoc_url="/redoc",
@@ -36,8 +36,13 @@ app.include_router(auth.router)
 
 
 @app.get("/")
-def root():
-    return {"message": "welcome to my api"}
+def first_page():
+    return {"message": "First page is loading......."}
+
+
+@app.get("/connection")
+def connection():
+    return {"message": "You are connected to the database."}
 
 
 @app.get("/health")
