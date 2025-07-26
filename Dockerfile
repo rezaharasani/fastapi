@@ -5,7 +5,7 @@ WORKDIR /code
 ENV TZ="Asia/Tehran"
 
 RUN echo "$TZ" > /etc/timezone && \
-    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+        ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     apt-get update && \
     apt-get install -y --no-install-recommends tzdata && \
     dpkg-reconfigure -f noninteractive tzdata && \
