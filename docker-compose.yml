@@ -1,6 +1,6 @@
 services:
 
-  app:
+  fastapi-app:
     build:
       context: .
       dockerfile: Dockerfile
@@ -43,7 +43,8 @@ services:
       - "4000:80"
     volumes:
       - ./nginx:/etc/nginx/conf.d
-
+    depends_on:
+      - fastapi-app
 
 volumes:
   postgres-db:
