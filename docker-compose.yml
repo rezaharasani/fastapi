@@ -41,7 +41,7 @@ services:
       - ./.env
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_USER=${POSTGRES_USER}git
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - ${POSTGRES_OUT_PORT}:5432
