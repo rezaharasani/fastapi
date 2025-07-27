@@ -14,8 +14,16 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
     PROJECT_VERSION: str = 'Testing'
+    ENVIRONMENT: str = 'Development'
 
     NGINX_PORT: str = '80'
+
+    OTEL_EXPORTER_OTLP_ENDPOINT: str
+    OTEL_TRACES_EXPORTER: str
+    OTEL_METRICS_EXPORTER: str
+    JAEGER_UI_OUT_PORT: str
+    OTLP_GRPC_OUT_PORT: str
+    COLLECTOR_OTLP_ENABLED: bool = True
 
     class Config:
         case_sensitive = False

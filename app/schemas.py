@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Optional, Annotated
 from pydantic import BaseModel, EmailStr, conint, BeforeValidator, Field
-
 from app import utils
 
 
