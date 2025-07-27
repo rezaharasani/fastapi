@@ -74,10 +74,10 @@ app.include_router(auth.router)
 
 
 @app.get("/")
-def first_page():
-    return {"message": "First page is loading..."}
+async def root():
+    return {"message": "Welcome to the FastAPI project."}
 
 
 @app.get("/health")
-def health_check():
+async def health_check():
     return {"status": "healthy"}
