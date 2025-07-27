@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: fastapi-app
     restart: unless-stopped
     env_file:
       - ./.env
@@ -29,6 +30,7 @@ services:
 
   postgres:
     image: postgres:17.5-alpine
+    container_name: postgres-db
     restart: unless-stopped
     env_file:
       - ./.env
@@ -42,6 +44,7 @@ services:
 
   nginx:
     image: nginx:1.29.0
+    container_name: nginx-proxy
     restart: unless-stopped
     env_file:
       - ./.env
@@ -56,9 +59,6 @@ services:
   jaeger:
     image: jaegertracing/all-in-one:latest
     container_name: jaeger
-    ports:
-      - "16686:16686"
-      - "4317:4317"
     environment:
       - COLLECTOR_OTLP_ENABLED=true
 
