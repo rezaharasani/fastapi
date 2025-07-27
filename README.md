@@ -1,4 +1,4 @@
-## PANDA (FastAPI Based Project):
+## FastAPI App:
 
 This project is my first python and fastapi program that consists of following technology stack:  
 ✓ Python  
