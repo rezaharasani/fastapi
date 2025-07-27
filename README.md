@@ -70,18 +70,26 @@ Before doing anything, set the following variables, as you want to be on your se
 so you can do not set them, if you accept the default values:
 
 ```bazaar
-POSTGRES_SERVER: str = 'localhost'
-POSTGRES_PORT: str = '5432'
-POSTGRES_OUT_PORT: str = '5432'
-POSTGRES_DB: str = 'postgres'
-POSTGRES_USER: str = 'postgres'
-POSTGRES_PASSWORD: str
+    POSTGRES_SERVER: str = 'localhost'
+    POSTGRES_PORT: str = '5432'
+    POSTGRES_OUT_PORT: str = '5432'
+    POSTGRES_DB: str = 'postgres'
+    POSTGRES_USER: str = 'postgres'
+    POSTGRES_PASSWORD: str
 
-SECRET_KEY: str
-ALGORITHM: str
-ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
-PROJECT_VERSION: str = 'Testing'
+    PROJECT_VERSION: str = '0.3.0'
+    ENVIRONMENT: str = 'Production'
 
-NGINX_PORT: str = '80'
+    NGINX_PORT: str = '80'
+
+    OTEL_EXPORTER_OTLP_ENDPOINT: str
+    OTEL_TRACES_EXPORTER: str
+    OTEL_METRICS_EXPORTER: str
+    JAEGER_UI_OUT_PORT: str
+    OTLP_GRPC_OUT_PORT: str
+    COLLECTOR_OTLP_ENABLED: bool = True
 ```
