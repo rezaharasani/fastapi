@@ -19,10 +19,15 @@ The final result of this project represents as following image (Swagger Style):
 
 <img width="1044" height="2028" alt="Project Entire Image" src="https://github.com/user-attachments/assets/fb0b47b0-6bff-4771-b89c-5a117e716f08" />
 
+The following picture represents sample Jaeger output for root endpoint (/):
+
+<img width="1540" height="823" alt="Screenshot 2025-07-27 at 22 47 31" src="https://github.com/user-attachments/assets/91433ea8-1811-4d9d-b33d-8c9eb21fe9ee" />
+
+
+
 ### Project structure:
 
 ```bazaar
-reza@Rezas-MacBook-Pro fastapi % tree                                  
 .
 ├── alembic.ini
 ├── app
@@ -33,12 +38,18 @@ reza@Rezas-MacBook-Pro fastapi % tree
 │   ├── models.py
 │   ├── oauth2.py
 │   ├── routers
+│   │   ├── __pycache__
+│   │   │   ├── auth.cpython-311.pyc
+│   │   │   ├── post.cpython-311.pyc
+│   │   │   ├── user.cpython-311.pyc
+│   │   │   └── vote.cpython-311.pyc
 │   │   ├── auth.py
 │   │   ├── post.py
 │   │   ├── user.py
 │   │   └── vote.py
 │   ├── schemas.py
 │   └── utils.py
+├── docker-compose-prod.yml
 ├── docker-compose.yml
 ├── Dockerfile
 ├── LICENSE
@@ -53,8 +64,6 @@ reza@Rezas-MacBook-Pro fastapi % tree
 │   └── app.conf
 ├── README.md
 └── requirements.txt
-
-6 directories, 24 files
 ```
 
 Before doing anything, set the following variables, as you want to be on your server. Some of them have default values,
