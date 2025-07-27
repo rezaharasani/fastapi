@@ -16,11 +16,15 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - ALGORITHM=${ALGORITHM}
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_METRICS_EXPORTER=none
     command: [ "fastapi", "run", "app/main.py", "--reload" ]
     volumes:
       - ./app:/code/app:ro
     depends_on:
       - postgres
+      - jaeger
 
 
   postgres:
@@ -39,13 +43,25 @@ services:
   nginx:
     image: nginx:1.29.0
     restart: unless-stopped
+    env_file:
+      - ./.env
     ports:
-      - "4000:80"
+      - "${NGINX_PORT}:80"
     volumes:
       - ./nginx:/etc/nginx/conf.d
     depends_on:
       - fastapi-app
 
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+
+
 volumes:
   postgres-db:
-

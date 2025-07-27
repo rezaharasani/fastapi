@@ -12,10 +12,10 @@ RUN echo "$TZ" > /etc/timezone && \
     apt-get install -y --no-install-recommends curl && \
     rm -rf /var/lib/apt/lists/*
 
-COPY ./requirements.txt /code/requirements.txt
+COPY ./requirements.txt .
 
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-COPY ./app /code/app
+COPY ./ /code/
 
-CMD ["fastapi", "run", "app/main.py", "--port", "8000"]
+CMD ["fastapi", "run", "app/main.py"]
