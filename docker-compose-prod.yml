@@ -2,6 +2,7 @@ services:
 
   fastapi-app:
     image: harasani/fastapi-app:${PROJECT_VERSION}
+    container_name: fastapi-app
     restart: unless-stopped
     env_file:
       - ./.env
@@ -25,6 +26,7 @@ services:
 
   postgres:
     image: postgres:17.5-alpine
+    container_name: postgres-db
     restart: unless-stopped
     env_file:
       - ./.env
@@ -43,6 +45,7 @@ services:
 
   nginx:
     image: nginx:1.29.0
+    container_name: nginx-proxy
     restart: unless-stopped
     env_file:
       - ./.env
