@@ -12,7 +12,8 @@ This project is my first python and fastapi program that consists of following t
 ✓ Psycopg2    
 ✓ Alembic  
 ✓ Git  
-✓ Nginx
+✓ Nginx  
+✓ Jaeger  
 
 The final result of this project represents as following image (Swagger Style):
 
