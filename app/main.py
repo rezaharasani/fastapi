@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from .routers import user, post, auth, vote
 
@@ -73,11 +73,11 @@ app.include_router(vote.router)
 app.include_router(auth.router)
 
 
-@app.get("/")
+@app.get("/", status_code=status.HTTP_200_OK)
 async def root():
     return {"message": "Welcome to the FastAPI project."}
 
 
-@app.get("/health")
+@app.get("/health", status_code=status.HTTP_200_OK)
 async def health_check():
     return {"status": "healthy"}
