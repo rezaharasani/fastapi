@@ -108,7 +108,7 @@ def delete_post(post_id: int, db: Session = Depends(get_db),
 
 
 @router.put("/{post_id}",
-            status_code=status.HTTP_201_CREATED,
+            status_code=status.HTTP_200_OK,
             response_model=schemas.Post
             )
 def update_post(post_id: int, post: schemas.PostCreate,
