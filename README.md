@@ -3,7 +3,7 @@
 This project is my first python and fastapi program that consists of following technology stack:  
 ✓ Python  
 ✓ Docker  
-✓ Docker Compose
+✓ Docker Compose  
 ✓ Postman  
 ✓ FastAPI  
 ✓ PostgreSQL  
@@ -14,6 +14,7 @@ This project is my first python and fastapi program that consists of following t
 ✓ Git  
 ✓ Nginx  
 ✓ Jaeger  
+✓ Pytest  
 
 The final result of this project represents as following image (Swagger Style):
 
