@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional, Annotated
-from pydantic import BaseModel, EmailStr, conint, BeforeValidator, Field
+from pydantic import BaseModel, EmailStr, conint, BeforeValidator, Field, ConfigDict
 from app import utils
 
 
@@ -21,8 +21,7 @@ class UserOut(BaseModel):
     created_at: datetime
     phone_number: Annotated[str, BeforeValidator(utils.reformat_phone_number)]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PostBase(BaseModel):
@@ -41,16 +40,14 @@ class Post(PostBase):
     owner_id: int
     owner: UserOut
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PostOut(BaseModel):
     Post: Post
     votes: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class Token(BaseModel):
