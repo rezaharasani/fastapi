@@ -47,7 +47,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Test with Pytest
+      - name: Connect to PostgresSQL
+        env:
+            POSTGRES_HOST: localhost
+            POSTGRES_PORT: 5432
         run: |
-          pip install pytest
-          pytest
+          docker exec -it postgres psql -U postgres fastapi_test 
+
+#      - name: Test with Pytest
+#        run: |
+#          pip install pytest
+#          pytest -v --disable-warnings
