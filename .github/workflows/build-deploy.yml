@@ -6,22 +6,23 @@ jobs:
   build:
     environment:
       name: FastAPI-Testing
+
     env:
-      POSTGRES_SERVER: ${{POSTGRES_SERVER}}
-      POSTGRES_PORT: ${{POSTGRES_PORT}}
-      POSTGRES_DB: ${{POSTGRES_DB}}
-      POSTGRES_USER: ${{POSTGRES_USER}}
-      POSTGRES_PASSWORD: ${{POSTGRES_PASSWORD}}
-      SECRET_KEY: ${{SECRET_KEY}}
-      ALGORITHM: ${{ALGORITHM}}
-      ACCESS_TOKEN_EXPIRE_MINUTES: ${{ACCESS_TOKEN_EXPIRE_MINUTES}}
+      POSTGRES_SERVER: ${{ secrets.POSTGRES_SERVER }}
+      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      ALGORITHM: ${{ secrets.ALGORITHM }}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
 
     runs-on: ubuntu-latest
     steps:
-      - name: Pulling git repo
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Python version 3.11
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -29,8 +30,13 @@ jobs:
       - name: Upgrade pip
         run: python3 -m pip install --upgrade pip
 
-      - name: Install all python dependencies
-        run: pip3 install -r requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Debug env (optional, for troubleshooting)
+        run: |
+          echo "Postgres Host: $POSTGRES_SERVER"
+          echo "DB Name: $POSTGRES_DB"
 
       - name: Test with Pytest
         run: |
