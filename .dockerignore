@@ -2,6 +2,7 @@
 .venv/
 tests/
 migrations/
+.github/
 Dockerfile
 docker-compose-prod.yml
 docker-compose.yml
