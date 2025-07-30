@@ -14,7 +14,7 @@ conn = psycopg2.connect(
     host="localhost",
     database="fastapi_test",
     user="postgres",
-    port="5432",
+    port="5444",
     password="password123",
     cursor_factory=RealDictCursor,
 )

@@ -50,8 +50,11 @@ jobs:
       - name: Docker Active Processes
         run: docker logs $(docker ps | grep postgres | awk '{print $1}')
 
-      - name: Connecting to Database
-        run:  python3 pycon.py
+      - name: Connect to PostgreSQL
+        run: docker exec -it $(docker ps | grep postgres | awk '{print $1}') psql -U postgres \l
+
+#      - name: Connecting to Database
+#        run:  python3 pycon.py
 
 #      - name: Test with Pytest
 #        run: |
