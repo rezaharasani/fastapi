@@ -3,7 +3,7 @@ name: Build and Deploy Code
 on: [ push, pull_request ]
 
 jobs:
-  job1:
+  install-python:
     runs-on: ubuntu-latest
     steps:
       - name: Pulling git repo
@@ -12,11 +12,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'   # caching pip dependencies
       - name: Upgrade pip
-        uses: python -m pip install --upgrade pip
+        uses: python3 -m pip install --upgrade pip
       - name: Install all python dependecies
-        uses: pip install -r requirements.txt
+        uses: pip3 install -r requirements.txt
 
 
 
