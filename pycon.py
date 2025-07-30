@@ -12,9 +12,9 @@ logger.setLevel(logging.INFO)
 
 conn = psycopg2.connect(
     host="localhost",
-    database="fastapi_test",
+    database="fastapi",
     user="postgres",
-    port="5444",
+    port="5432",
     password="password123",
     cursor_factory=RealDictCursor,
 )

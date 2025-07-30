@@ -11,12 +11,15 @@ from app.config import settings
 from app.database import get_db, Base
 from app.oauth2 import create_access_token
 
-SQLALCHEMY_DATABASE_URL = (f"postgresql://"
-                           f"{settings.POSTGRES_USER}:"
-                           f"{settings.POSTGRES_PASSWORD}@"
-                           f"{settings.POSTGRES_SERVER}:"
-                           f"{settings.POSTGRES_PORT}/"
-                           f"{settings.POSTGRES_DB}_test")
+# SQLALCHEMY_DATABASE_URL = (f"postgresql://"
+#                            f"{settings.POSTGRES_USER}:"
+#                            f"{settings.POSTGRES_PASSWORD}@"
+#                            f"{settings.POSTGRES_SERVER}:"
+#                            f"{settings.POSTGRES_PORT}/"
+#                            f"{settings.POSTGRES_DB}")
+
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:password123@localhost:5432/fastapi"
+
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 TestingSessionLocal = sessionmaker(

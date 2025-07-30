@@ -4,8 +4,8 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     POSTGRES_SERVER: str = 'localhost'
     POSTGRES_PORT: str = '5432'
-    POSTGRES_OUT_PORT: str = '5444'
-    POSTGRES_DB: str = 'postgres'
+    POSTGRES_OUT_PORT: str = '5432'
+    POSTGRES_DB: str = 'fastapi'
     POSTGRES_USER: str = 'postgres'
     POSTGRES_PASSWORD: str
 
