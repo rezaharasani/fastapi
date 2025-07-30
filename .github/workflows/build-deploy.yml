@@ -8,14 +8,13 @@ jobs:
       name: FastAPI-Testing
 
     env:
-      POSTGRES_SERVER: ${{ secrets.POSTGRES_SERVER }}
-      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-      POSTGRES_OUT_PORT: ${{ secrets.POSTGRES_OUT_PORT }}
-      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      ALGORITHM: ${{ secrets.ALGORITHM }}
+      POSTGRES_SERVER: ${{secrets.POSTGRES_SERVER}}
+      POSTGRES_PORT: ${{secrets.POSTGRES_PORT}}
+      POSTGRES_DB: ${{secrets.POSTGRES_DB}}
+      POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+      POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+      SECRET_KEY: ${{secrets.SECRET_KEY}}
+      ALGORITHM: ${{secrets.ALGORITHM}}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
 
     services:
@@ -24,8 +23,8 @@ jobs:
         ports:
           - 5444:5432
         env:
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}_test
+          POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+          POSTGRES_DB: ${{secrets.POSTGRES_DB}}_test
         options: >-
           --health-cmd="pg_isready -U postgres"
           --health-interval=10s
