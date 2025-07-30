@@ -20,21 +20,22 @@ jobs:
     services:
       postgres:
         image: postgres:17.5-alpine
-        env:
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: fastapi_test
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
         ports:
           - 5432:5432
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        options: >-
+          --health-cmd="pg_isready -U testuser"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     runs-on: ubuntu-latest
+
     steps:
-      #      - name: Checkout code
-      #        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       #      - name: Setup Python
       #        uses: actions/setup-python@v5
@@ -48,7 +49,7 @@ jobs:
       #        run: pip install -r requirements.txt
 
       - name: Gathering Information About System
-        run: docker ps -a
+        run: ls -l
 
 #      - name: Connect to PostgreSQL
 #        run:  python3 pycon.py
