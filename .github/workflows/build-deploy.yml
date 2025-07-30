@@ -29,7 +29,6 @@ jobs:
           - 5454:5432
         env:
           POSTGRES_DB: fastapi_test
-          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password123
         options: >-
           --health-cmd="pg_isready -U postgres"
@@ -56,7 +55,7 @@ jobs:
 
       - name: Wait for PostgreSQL to be ready
         run: |
-          until pg_isready -h localhost -p 5432 -U postgres; 
+          until pg_isready -h localhost -p 5454 -U postgres; 
           do
             echo "Waiting for PostgreSQL..."
             sleep 2
