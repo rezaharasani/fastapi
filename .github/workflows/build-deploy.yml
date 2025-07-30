@@ -2,7 +2,7 @@ name: CI with PostgreSQL
 
 on:
   push:
-    branches: [main]
+    branches: [CICD]
   pull_request:
 
 jobs:
