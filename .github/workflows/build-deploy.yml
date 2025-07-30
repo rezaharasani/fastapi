@@ -6,13 +6,12 @@ jobs:
   build:
     environment:
       name: FastAPI-Testing
-
     env:
-#      POSTGRES_SERVER: ${{secrets.POSTGRES_SERVER}}
-#      POSTGRES_PORT: ${{secrets.POSTGRES_PORT}}
-#      POSTGRES_DB: ${{secrets.POSTGRES_DB}}
-#      POSTGRES_USER: ${{secrets.POSTGRES_USER}}
-#      POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+      #      POSTGRES_SERVER: ${{secrets.POSTGRES_SERVER}}
+      #      POSTGRES_PORT: ${{secrets.POSTGRES_PORT}}
+      #      POSTGRES_DB: ${{secrets.POSTGRES_DB}}
+      #      POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+      #      POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
       POSTGRES_SERVER: 127.0.0.1
       POSTGRES_PORT: 5454
       POSTGRES_DB: fastapi_test
@@ -35,35 +34,17 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Upgrade pip
         run: python3 -m pip install --upgrade pip
-
       - name: Install dependencies
         run: pip install -r requirements.txt
-
-      - name: Wait for PostgreSQL to be ready
-        run: |
-          until pg_isready -h localhost -p 5454 -U postgres; 
-          do
-            echo "Waiting for PostgreSQL..."
-            sleep 2
-          done
-          echo "PostgreSQL is ready!"
-
-#      - name: Connect to PostgreSQL
-#        run:  python3 pycon.py
-
       - name: Test with Pytest
-        run: pytest -v --disable-warnings
+        run: pytest -v --disable-warnings tests/test_main.py
