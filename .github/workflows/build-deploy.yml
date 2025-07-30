@@ -21,7 +21,7 @@ jobs:
       postgres:
         image: postgres:17.5-alpine
         ports:
-          - 5444:5432
+          - 5432:5432
         env:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}_test
