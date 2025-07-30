@@ -47,12 +47,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Connect to PostgresSQL
-        env:
-            POSTGRES_HOST: localhost
-            POSTGRES_PORT: 5432
-        run: |
-          docker exec -it postgres psql -U postgres fastapi_test 
+      - name: Docker Active Processes
+        run: docker ps -a
 
 #      - name: Test with Pytest
 #        run: |
