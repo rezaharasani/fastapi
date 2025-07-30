@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 from .config import settings
 
 SQLALCHEMY_DATABASE_URL = \
-    (f"postgresql+psycopg2://"
+    (f"postgresql://"
      f"{settings.POSTGRES_USER}:"
      f"{settings.POSTGRES_PASSWORD}@"
      f"{settings.POSTGRES_SERVER}:"

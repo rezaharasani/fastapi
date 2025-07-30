@@ -16,15 +16,14 @@ from app.oauth2 import create_access_token
 #                            f"{settings.POSTGRES_PASSWORD}@"
 #                            f"{settings.POSTGRES_SERVER}:"
 #                            f"{settings.POSTGRES_PORT}/"
-#                            f"{settings.POSTGRES_DB}")
+#                            f"{settings.POSTGRES_DB}_test")
 
-SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:password123@127.0.0.1:5432/fastapi"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:password123@127.0.0.1:5454/fastapi_test"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 TestingSessionLocal = sessionmaker(
-    autocommit=False, autoflush=False, bind=engine
-)
+    autocommit=False, autoflush=False, bind=engine)
 
 
 @pytest.fixture(scope="function")

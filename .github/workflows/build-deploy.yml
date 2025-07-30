@@ -14,8 +14,8 @@ jobs:
 #      POSTGRES_USER: ${{secrets.POSTGRES_USER}}
 #      POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
       POSTGRES_SERVER: 127.0.0.1
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: fastapi
+      POSTGRES_PORT: 5454
+      POSTGRES_DB: fastapi_test
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: passwod123
       SECRET_KEY: ${{secrets.SECRET_KEY}}
@@ -26,9 +26,9 @@ jobs:
       postgres:
         image: postgres:17.5-alpine
         ports:
-          - 5432:5432
+          - 5454:5432
         env:
-          POSTGRES_DB: fastapi
+          POSTGRES_DB: fastapi_test
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password123
         options: >-
@@ -67,4 +67,4 @@ jobs:
 #        run:  python3 pycon.py
 
       - name: Test with Pytest
-        run: pytest -v
+        run: pytest -v --disable-warnings
