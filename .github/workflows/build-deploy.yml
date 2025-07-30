@@ -3,19 +3,19 @@ name: Build and Deploy Code
 on: [ push, pull_request ]
 
 jobs:
-  install-python:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Pulling git repo
         uses: actions/checkout@v4
+
       - name: Install Python version 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - name: Upgrade pip
-        uses: python3 -m pip install --upgrade pip
-      - name: Install all python dependecies
-        uses: pip3 install -r requirements.txt
+        run: python3 -m pip install --upgrade pip
 
-
-
+      - name: Install all python dependencies
+        run: pip3 install -r requirements.txt
