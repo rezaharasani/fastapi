@@ -1,7 +1,3 @@
-from fastapi import FastAPI, status
-from fastapi.middleware.cors import CORSMiddleware
-from .routers import user, post, auth, vote
-
 import logging
 from opentelemetry import trace
 from opentelemetry.sdk.resources import Resource
@@ -13,6 +9,12 @@ from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
 from opentelemetry.instrumentation.logging import LoggingInstrumentor
 
+from fastapi import FastAPI, status
+from fastapi.middleware.cors import CORSMiddleware
+
+from .routers import user, post, auth, vote
+from .tracing_middleware import TraceRequestBodyMiddleware, TraceResponseBodyMiddleware
+
 """ Notice:
 Our database will be created automatically by alembic.
 The following method is used to initialize database by manual way."""
@@ -23,12 +25,12 @@ from .config import settings
 models.Base.metadata.create_all(bind=engine)
 
 # --- Logging Setup with Correlation ---
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s [trace_id=%(otelTraceID)s span_id=%(otelSpanID)s] %(message)s",
-)
-logger = logging.getLogger("app")
-LoggingInstrumentor().instrument(set_logging_format=True)
+# logging.basicConfig(
+#     level=logging.INFO,
+#     format="%(asctime)s %(levelname)s [trace_id=%(otelTraceID)s span_id=%(otelSpanID)s] %(message)s",
+# )
+# logger = logging.getLogger("app")
+# LoggingInstrumentor().instrument(set_logging_format=True)
 
 # --- OpenTelemetry Setup ---
 resource = Resource.create({"service.name": "fastapi-app"})
@@ -59,6 +61,11 @@ FastAPIInstrumentor().instrument_app(app)
 
 tracer = trace.get_tracer(__name__)
 
+# This is used for capturing content body of HTTP request and response.
+# Be careful, in real production environment, you should not use this.
+app.add_middleware(TraceRequestBodyMiddleware)
+# app.add_middleware(TraceResponseBodyMiddleware)
+#
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
