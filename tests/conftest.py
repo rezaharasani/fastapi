@@ -18,7 +18,7 @@ from app.oauth2 import create_access_token
 #                            f"{settings.POSTGRES_PORT}/"
 #                            f"{settings.POSTGRES_DB}")
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:password123@localhost:5432/fastapi"
+SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:password123@127.0.0.1:5432/fastapi"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 

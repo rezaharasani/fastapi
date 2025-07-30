@@ -8,11 +8,16 @@ jobs:
       name: FastAPI-Testing
 
     env:
-      POSTGRES_SERVER: ${{secrets.POSTGRES_SERVER}}
-      POSTGRES_PORT: ${{secrets.POSTGRES_PORT}}
-      POSTGRES_DB: ${{secrets.POSTGRES_DB}}
-      POSTGRES_USER: ${{secrets.POSTGRES_USER}}
-      POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+#      POSTGRES_SERVER: ${{secrets.POSTGRES_SERVER}}
+#      POSTGRES_PORT: ${{secrets.POSTGRES_PORT}}
+#      POSTGRES_DB: ${{secrets.POSTGRES_DB}}
+#      POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+#      POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+      POSTGRES_SERVER: 127.0.0.1
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: fastapi
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: passwod123
       SECRET_KEY: ${{secrets.SECRET_KEY}}
       ALGORITHM: ${{secrets.ALGORITHM}}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
