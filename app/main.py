@@ -1,4 +1,3 @@
-import logging
 from opentelemetry import trace
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
@@ -22,18 +21,18 @@ from .config import settings
 
 models.Base.metadata.create_all(bind=engine)
 
-resource = Resource.create({"service.name": "fastapi-app"})
-provider = TracerProvider(resource=resource)
-trace.set_tracer_provider(provider)
-
-otlp_exporter = OTLPSpanExporter(
-    endpoint="http://jaeger:4317",
-    insecure=True
-)
-span_processor = BatchSpanProcessor(otlp_exporter)
-provider.add_span_processor(span_processor)
-
-HTTPXClientInstrumentor().instrument()
+# resource = Resource.create({"service.name": "fastapi-app"})
+# provider = TracerProvider(resource=resource)
+# trace.set_tracer_provider(provider)
+#
+# otlp_exporter = OTLPSpanExporter(
+#     endpoint="http://jaeger:4317",
+#     insecure=True
+# )
+# span_processor = BatchSpanProcessor(otlp_exporter)
+# provider.add_span_processor(span_processor)
+#
+# HTTPXClientInstrumentor().instrument()
 
 app = FastAPI(
     title="FastAPI",
@@ -44,9 +43,9 @@ app = FastAPI(
     root_path="/api/v1",
     deprecated=False
 )
-FastAPIInstrumentor().instrument_app(app)
-
-tracer = trace.get_tracer(__name__)
+# FastAPIInstrumentor().instrument_app(app)
+#
+# tracer = trace.get_tracer(__name__)
 
 app.add_middleware(
     CORSMiddleware,
