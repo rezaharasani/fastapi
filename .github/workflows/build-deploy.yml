@@ -21,7 +21,7 @@ jobs:
       postgres:
         image: postgres:17.5-alpine
         ports:
-          - 5432:5432
+          - 5444:5432
         env:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
@@ -37,22 +37,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      #      - name: Setup Python
-      #        uses: actions/setup-python@v5
-      #        with:
-      #          python-version: '3.11'
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-      #      - name: Upgrade pip
-      #        run: python3 -m pip install --upgrade pip
-      #
-      #      - name: Install dependencies
-      #        run: pip install -r requirements.txt
+      - name: Upgrade pip
+        run: python3 -m pip install --upgrade pip
 
-      - name: Gathering Information About System
-        run: ls -l
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-#      - name: Connect to PostgreSQL
-#        run:  python3 pycon.py
+      - name: Connect to PostgreSQL
+        run:  python3 pycon.py
 
 #      - name: Test with Pytest
 #        run: |
