@@ -51,5 +51,5 @@ jobs:
       - name: Connect to PostgreSQL
         run:  python3 pycon.py
 
-#      - name: Test with Pytest
-#        run: pytest -v
+      - name: Test with Pytest
+        run: pytest -v
