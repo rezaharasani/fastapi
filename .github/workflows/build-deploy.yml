@@ -48,10 +48,10 @@ jobs:
       #        run: pip install -r requirements.txt
 
       - name: Docker Active Processes
-        run: docker ps -a
+        run: docker logs $(docker ps | grep postgres | awk '{print $1}')
 
       - name: Connecting to Database
-        run:
+        run:  python3 pycon.py
 
 #      - name: Test with Pytest
 #        run: |
