@@ -17,6 +17,20 @@ jobs:
       ALGORITHM: ${{ secrets.ALGORITHM }}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
 
+    services:
+      postgres:
+        image: postgres:17.5-alpine
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -32,11 +46,6 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
-
-      - name: Debug env (optional, for troubleshooting)
-        run: |
-          echo "Postgres Host: $POSTGRES_SERVER"
-          echo "DB Name: $POSTGRES_DB"
 
       - name: Test with Pytest
         run: |
