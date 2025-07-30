@@ -47,12 +47,8 @@ jobs:
       #      - name: Install dependencies
       #        run: pip install -r requirements.txt
 
-      - name: Get dir list
-        run: |
-          echo "Full path: $(pwd)"
-          hostnamectl
-          netstat | grep ESTABLISHED
-          ip a
+      - name: Gathering Information About System
+        run: docker ps -a
 
 #      - name: Connect to PostgreSQL
 #        run:  python3 pycon.py
