@@ -49,8 +49,17 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Connect to PostgreSQL
-        run:  python3 pycon.py
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres; 
+          do
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
+          echo "PostgreSQL is ready!"
+
+#      - name: Connect to PostgreSQL
+#        run:  python3 pycon.py
 
       - name: Test with Pytest
         run: pytest -v
