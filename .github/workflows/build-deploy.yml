@@ -48,10 +48,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Connect to PostgreSQL
-        run:  python3 pycon.py
+#      - name: Connect to PostgreSQL
+#        run:  python3 pycon.py
 
-#      - name: Test with Pytest
-#        run: |
-#          pip install pytest
-#          pytest -v --disable-warnings
+      - name: Test with Pytest
+        run: |
+          pip install pytest
+          pytest -v --disable-warnings
