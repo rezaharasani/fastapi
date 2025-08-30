@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Annotated
 from fastapi import status, Response, HTTPException, Depends, APIRouter
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -15,7 +15,7 @@ router = APIRouter(
             status_code=status.HTTP_200_OK,
             response_model=List[schemas.PostOut],
             )
-def get_posts(db: Session = Depends(get_db),
+def get_posts(db: Annotated[Session, Depends(get_db)],
               current_user=Depends(oauth2.get_current_user),
               limit: int = 100, offset: int = 0, search: Optional[str] = ""
               ):
@@ -50,7 +50,7 @@ def create_post(post: schemas.PostCreate, db: Session = Depends(get_db),
             status_code=status.HTTP_200_OK,
             response_model=schemas.Post
             )
-def get_latest_post(db: Session = Depends(get_db)):
+def get_latest_post(db: Annotated[Session, Depends(get_db)]):
     """Get latest post"""
     lastest_post = db.query(models.Post).order_by(models.Post.created_at.desc()).first()
 
@@ -64,7 +64,7 @@ def get_latest_post(db: Session = Depends(get_db)):
             status_code=status.HTTP_200_OK,
             response_model=schemas.PostOut
             )
-def get_post_by_id(post_id: int, db: Session = Depends(get_db),
+def get_post_by_id(post_id: int, db: Annotated[Session, Depends(get_db)],
                    current_user=Depends(oauth2.get_current_user)
                    ):
     response = db. \
@@ -88,7 +88,7 @@ def get_post_by_id(post_id: int, db: Session = Depends(get_db),
 @router.delete("/{post_id}",
                status_code=status.HTTP_204_NO_CONTENT
                )
-def delete_post(post_id: int, db: Session = Depends(get_db),
+def delete_post(post_id: int, db: Annotated[Session, Depends(get_db)],
                 current_user=Depends(oauth2.get_current_user)
                 ):
     post_query = db.query(models.Post).filter(models.Post.id == post_id)
@@ -104,7 +104,6 @@ def delete_post(post_id: int, db: Session = Depends(get_db),
 
     post_query.delete(synchronize_session=False)
     db.commit()
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.put("/{post_id}",
@@ -112,7 +111,7 @@ def delete_post(post_id: int, db: Session = Depends(get_db),
             response_model=schemas.Post
             )
 def update_post(post_id: int, post: schemas.PostCreate,
-                db: Session = Depends(get_db),
+                db: Annotated[Session, Depends(get_db)],
                 current_user=Depends(oauth2.get_current_user)
                 ):
     db_query = db.query(models.Post).filter(models.Post.id == post_id)
