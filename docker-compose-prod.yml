@@ -15,9 +15,6 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - ALGORITHM=${ALGORITHM}
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
-      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
-      - OTEL_TRACES_EXPORTER=${OTEL_TRACES_EXPORTER}
-      - OTEL_METRICS_EXPORTER=${OTEL_METRICS_EXPORTER}
     healthcheck:
       test: curl --fail http://localhost:8000/health || exit 1
       interval: 2s
@@ -26,7 +23,6 @@ services:
       start_period: 5s
     depends_on:
       - postgres
-      - jaeger
 
   postgres:
     image: postgres:17.5-alpine
@@ -65,14 +61,6 @@ services:
       - ./nginx:/etc/nginx/conf.d
     depends_on:
       - fastapi-app
-
-
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    container_name: jaeger
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
-
 
 volumes:
   postgres-db:

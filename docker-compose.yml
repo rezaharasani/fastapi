@@ -18,10 +18,6 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - ALGORITHM=${ALGORITHM}
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
-      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
-      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
-      - OTEL_TRACES_EXPORTER=${OTEL_TRACES_EXPORTER}
-      - OTEL_METRICS_EXPORTER=${OTEL_METRICS_EXPORTER}
     ports:
       - "8000:8000"
     command: [ "fastapi", "run", "app/main.py", "--reload" ]
@@ -29,8 +25,6 @@ services:
       - ./:/code/:ro
     depends_on:
       - postgres
-      - jaeger
-
 
   postgres:
     image: postgres:17.5-alpine
@@ -47,7 +41,6 @@ services:
     volumes:
       - postgres-db:/var/lib/postgresql/data
 
-
   #  nginx:
   #    image: nginx:1.29.0
   #    container_name: nginx-proxy
@@ -60,16 +53,6 @@ services:
   #      - ./nginx:/etc/nginx/conf.d
   #    depends_on:
   #      - fastapi-app
-
-
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    container_name: jaeger
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
-    ports:
-      - "16686:16686"
-
 
 volumes:
   postgres-db:
