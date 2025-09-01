@@ -13,7 +13,6 @@ This project is my first python and fastapi program that consists of following t
 ✓ Alembic  
 ✓ Git  
 ✓ Nginx  
-✓ Jaeger  
 ✓ Pytest  
 
 The final result of this project represents as following image (Swagger Style):
