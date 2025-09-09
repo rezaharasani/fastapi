@@ -17,13 +17,8 @@ jobs:
           username: ${{ vars.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Get Commit Short SHA
-        run: |
-          CI_GITHUB_SHA=$GITHUB_SHA
-          CI_COMMIT_SHORT_SHA="${CI_GITHUB_SHA:0:7}"
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: harasani/fastapi-cicd:github-$CI_COMMIT_SHORT_SHA
+          tags: harasani/fastapi-cicd:github-$GITHUB_RUN_ID
