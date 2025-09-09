@@ -2,7 +2,7 @@ name: Fastapi Pipeline
 
 on:
   push:
-    branches: [ "github-actions-pipeline-to-deploy" ]
+    branches: [ "feature/github-actions-pipeline-to-deploy" ]
 
 jobs:
   build:
