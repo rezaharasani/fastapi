@@ -21,4 +21,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: harasani/fastapi-cicd:github-$GITHUB_RUN_ID
+          tags: harasani/fastapi-cicd:github-${{ github.RUN_ID }}
