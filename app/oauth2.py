@@ -1,8 +1,8 @@
-from datetime import timedelta, datetime, UTC
-from fastapi import Depends, status, HTTPException
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+from datetime import timedelta, datetime
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
+from fastapi import Depends, status, HTTPException
+from fastapi.security import OAuth2PasswordBearer
 from . import schemas, models, database
 from .config import settings
 
@@ -13,7 +13,9 @@ def create_access_token(data: dict):
     """Create access token"""
     to_encode = data.copy()
 
-    expire_time = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire_time = datetime.utcnow() + timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )
     to_encode.update({"exp": expire_time})
 
     token = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
@@ -23,7 +25,9 @@ def create_access_token(data: dict):
 def verify_access_token(token: str, credentials_exception):
     """Validates the token."""
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        payload = jwt.decode(
+            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+        )
         user_id: str = payload.get("user_id")
         if user_id is None:
             raise credentials_exception
@@ -35,13 +39,15 @@ def verify_access_token(token: str, credentials_exception):
         raise credentials_exception
 
 
-def get_current_user(token: str = Depends(oauth2_scheme),
-                     db: Session = Depends(database.get_db)
-                     ):
+def get_current_user(
+    token: str = Depends(oauth2_scheme), db: Session = Depends(database.get_db)
+):
     """Get the current user from the token."""
-    credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                          detail="Could not validate credentials",
-                                          headers={"WWW-Authenticate": "Bearer"})
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
 
     token = verify_access_token(token, credentials_exception)
     db_user = db.query(models.User).filter(models.User.id == token.id).first()

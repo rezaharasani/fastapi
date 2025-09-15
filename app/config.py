@@ -2,28 +2,19 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    POSTGRES_SERVER: str = 'localhost'
-    POSTGRES_PORT: str = '5432'
-    POSTGRES_OUT_PORT: str = '5432'
-    POSTGRES_DB: str = 'postgres'
-    POSTGRES_USER: str = 'postgres'
+    POSTGRES_SERVER: str = "localhost"
+    POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str
+    POSTGRES_PORT: int = 5432
+    POSTGRES_OUT_PORT: str
+    POSTGRES_DB: str
 
     SECRET_KEY: str
-    ALGORITHM: str
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
-    PROJECT_VERSION: str = 'Testing'
-    ENVIRONMENT: str = 'Development'
-
-    NGINX_PORT: str = '80'
-
-    OTEL_EXPORTER_OTLP_ENDPOINT: str
-    OTEL_TRACES_EXPORTER: str
-    OTEL_METRICS_EXPORTER: str
-    JAEGER_UI_OUT_PORT: str
-    OTLP_GRPC_OUT_PORT: str
-    COLLECTOR_OTLP_ENABLED: bool = True
+    PROJECT_VERSION: str
+    ENVIRONMENT: str
 
     class Config:
         case_sensitive = False

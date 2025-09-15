@@ -13,83 +13,51 @@ This project is my first python and fastapi program that consists of following t
 ✓ Alembic  
 ✓ Git  
 ✓ Nginx  
-✓ Pytest  
+✓ Pytest
 
-The final result of this project represents as following image (Swagger Style):
+### To run and setup this project, run the following commands in your terminal:
 
-<img width="1044" height="2028" alt="Project Entire Image" src="https://github.com/user-attachments/assets/fb0b47b0-6bff-4771-b89c-5a117e716f08" />
-
-The following picture represents sample Jaeger output for root endpoint (/):
-
-<img width="1540" height="823" alt="Screenshot 2025-07-27 at 22 47 31" src="https://github.com/user-attachments/assets/91433ea8-1811-4d9d-b33d-8c9eb21fe9ee" />
-
-
-
-### Project structure:
+Clone the project into your path:
 
 ```bazaar
-.
-├── alembic.ini
-├── app
-│   ├── __init__.py
-│   ├── config.py
-│   ├── database.py
-│   ├── main.py
-│   ├── models.py
-│   ├── oauth2.py
-│   ├── routers
-│   │   ├── __pycache__
-│   │   │   ├── auth.cpython-311.pyc
-│   │   │   ├── post.cpython-311.pyc
-│   │   │   ├── user.cpython-311.pyc
-│   │   │   └── vote.cpython-311.pyc
-│   │   ├── auth.py
-│   │   ├── post.py
-│   │   ├── user.py
-│   │   └── vote.py
-│   ├── schemas.py
-│   └── utils.py
-├── docker-compose-prod.yml
-├── docker-compose.yml
-├── Dockerfile
-├── LICENSE
-├── migrations
-│   ├── env.py
-│   ├── README
-│   ├── script.py.mako
-│   └── versions
-│       ├── 336f43959f4e_initial_migrations.py
-│       └── ba92276cdf52_add_phone_number_column_to_users_table.py
-├── nginx
-│   └── app.conf
-├── README.md
-└── requirements.txt
+git clone https://gitlab.com/harasani-gitops/fastapi.git
 ```
 
-Before doing anything, set the following variables, as you want to be on your server. Some of them have default values,
-so you can do not set them, if you accept the default values:
+Then, change directory in to project folder:
 
 ```bazaar
-    POSTGRES_SERVER: str = 'localhost'
-    POSTGRES_PORT: str = '5432'
-    POSTGRES_OUT_PORT: str = '5432'
-    POSTGRES_DB: str = 'postgres'
-    POSTGRES_USER: str = 'postgres'
-    POSTGRES_PASSWORD: str
-
-    SECRET_KEY: str
-    ALGORITHM: str
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
-
-    PROJECT_VERSION: str = '0.3.0'
-    ENVIRONMENT: str = 'Production'
-
-    NGINX_PORT: str = '80'
-
-    OTEL_EXPORTER_OTLP_ENDPOINT: str
-    OTEL_TRACES_EXPORTER: str
-    OTEL_METRICS_EXPORTER: str
-    JAEGER_UI_OUT_PORT: str
-    OTLP_GRPC_OUT_PORT: str
-    COLLECTOR_OTLP_ENABLED: bool = True
+cd fastapi/
 ```
+
+Finally, run `docker compose` command into related directory. Note that this project includes
+two docker compose files. One for development environment, and the another one for production.
+So, for testing this project in your local environment, you can the followng command:
+
+```bazaar
+docker compose -f docker-compose-dev.yml up -d
+```
+
+After runing this command, you can see our service on `http://127.0.0.1:8000` address. If you want
+to see docs section, you can put `/docs` at the end of above address to see docs Swagger page.
+
+**Notice**: Before doing anything, set the following variables, as you want to be on your server.
+In below, we put some default values to know how to set appropriate values for these variables:
+
+```bazaar
+    POSTGRES_SERVER: str = postgres (required)
+    POSTGRES_PORT: int = 5432
+    POSTGRES_OUT_PORT: str
+    POSTGRES_DB: str = fastapi (required)
+    POSTGRES_USER: str = postgres
+    POSTGRES_PASSWORD: str = password123 (required)
+
+    SECRET_KEY: str (required)
+    ALGORITHM: str = HS256 (required)
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 (required)
+
+    PROJECT_VERSION: str = 0.1.0-rc1
+    ENVIRONMENT: str = Development
+```
+
+Variables that have `required` string in front of those, MUST set proper values. All above variables
+are places into `.env` file. So, you shuld change them at this file, not anywhere else.

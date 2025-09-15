@@ -11,22 +11,21 @@ from app.config import settings
 from app.database import get_db, Base
 from app.oauth2 import create_access_token
 
-SQLALCHEMY_DATABASE_URL = \
-    (f"postgresql://"
-     f"{settings.POSTGRES_USER}:"
-     f"{settings.POSTGRES_PASSWORD}@"
-     f"{settings.POSTGRES_SERVER}:"
-     f"{settings.POSTGRES_PORT}/"
-     f"{settings.POSTGRES_DB}_test")
+SQLALCHEMY_DATABASE_URL = (
+    f"postgresql+psycopg2://"
+    f"{settings.POSTGRES_USER}:"
+    f"{settings.POSTGRES_PASSWORD}@"
+    f"{settings.POSTGRES_SERVER}:"
+    f"{settings.POSTGRES_PORT}/"
+    f"{settings.POSTGRES_DB}"
+)
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
-TestingSessionLocal = sessionmaker(
-    autocommit=False, autoflush=False, bind=engine
-)
+TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def session():
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
@@ -37,7 +36,7 @@ def session():
         db.close()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def client(session):
     def override_get_db():
         try:
@@ -54,7 +53,7 @@ def test_user(client):
     user_data = {
         "email": "test@localhost.com",
         "password": "password123",
-        "phone_number": "09111234567"
+        "phone_number": "09111234567",
     }
     response = client.post("/users/", json=user_data)
     assert response.status_code == status.HTTP_201_CREATED
@@ -68,7 +67,7 @@ def test_user2(client):
     user_data = {
         "email": "user@localhost.com",
         "password": "password123",
-        "phone_number": "09117654321"
+        "phone_number": "09117654321",
     }
     response = client.post("/users/", json=user_data)
     assert response.status_code == status.HTTP_201_CREATED
@@ -90,23 +89,20 @@ def authorized_client(client, token):
 
 @pytest.fixture
 def test_posts(test_user, session, test_user2):
-    posts_data = [{
-        "title": "First Post",
-        "content": "First Content",
-        "owner_id": test_user["id"]
-    }, {
-        "title": "2nd Post",
-        "content": "2nd Content",
-        "owner_id": test_user["id"]
-    }, {
-        "title": "3rd Post",
-        "content": "3rd Content",
-        "owner_id": test_user["id"]
-    }, {
-        "title": "1st Post of user 2",
-        "content": "1st Content of user 2",
-        "owner_id": test_user2["id"]
-    }]
+    posts_data = [
+        {
+            "title": "First Post",
+            "content": "First Content",
+            "owner_id": test_user["id"],
+        },
+        {"title": "2nd Post", "content": "2nd Content", "owner_id": test_user["id"]},
+        {"title": "3rd Post", "content": "3rd Content", "owner_id": test_user["id"]},
+        {
+            "title": "1st Post of user 2",
+            "content": "1st Content of user 2",
+            "owner_id": test_user2["id"],
+        },
+    ]
 
     def create_post_model(post):
         return models.Post(**post)
