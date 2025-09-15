@@ -1,10 +1,12 @@
+---
 services:
 
-  fastapi-app:
+  fastapi:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: fastapi-app
+    image: fastapi:latest
+    container_name: fastapi
     restart: unless-stopped
     env_file:
       - ./.env
@@ -17,51 +19,41 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - ALGORITHM=${ALGORITHM}
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
-      - OTEL_TRACES_EXPORTER=otlp
-      - OTEL_METRICS_EXPORTER=none
-    command: [ "fastapi", "run", "app/main.py", "--reload" ]
+    command: ["fastapi", "run", "app/main.py", "--reload"]
+    ports:
+      - "8000:8000"
     volumes:
-      - ./app:/code/app:ro
+      - ./:/code:ro
+    healthcheck:
+      test: curl --fail http://127.0.0.1:8000/health || exit 1
+      interval: 2s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
     depends_on:
-      - postgres
-      - jaeger
-
+      postgres:
+        condition: service_healthy
 
   postgres:
     image: postgres:17.5-alpine
-    container_name: postgres-db
+    container_name: postgres
     restart: unless-stopped
     env_file:
       - ./.env
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}git
+      - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - postgres-db:/var/lib/postgresql/data
-
-
-  nginx:
-    image: nginx:1.29.0
-    container_name: nginx-proxy
-    restart: unless-stopped
-    env_file:
-      - ./.env
     ports:
-      - "${NGINX_PORT}:80"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-    depends_on:
-      - fastapi-app
-
-
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    container_name: jaeger
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
-
+      - "5454:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
 
 volumes:
   postgres-db:

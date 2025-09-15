@@ -1,14 +1,12 @@
 .pytest_cache
 .venv/
-tests/
 migrations/
 Dockerfile
 docker-compose-prod.yml
-docker-compose.yml
 LICENSE
 README.md
 prod.env
-.env
-.dockerignore
 .gitignore
 alembic.ini
+mypy.ini
+sample.env
