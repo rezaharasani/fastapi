@@ -1,3 +1,9 @@
+[![pipeline status](https://gitlab.com/harasani-gitops/fastapi/badges/main/pipeline.svg)](https://gitlab.com/harasani-gitops/fastapi/-/commits/main) 
+[![coverage report](https://gitlab.com/harasani-gitops/fastapi/badges/main/coverage.svg)](https://gitlab.com/harasani-gitops/fastapi/-/commits/main) 
+[![Latest Release](https://gitlab.com/harasani-gitops/fastapi/-/badges/release.svg)](https://gitlab.com/harasani-gitops/fastapi/-/releases) 
+
+
+
 ## FastAPI App:
 
 This project is my first python and fastapi program that consists of following technology stack:  
