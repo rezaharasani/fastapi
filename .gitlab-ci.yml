@@ -19,7 +19,7 @@ variables:
   DOCKER_HUB_IMAGE: harasani/fastapi
   DOCKER_HUB_LATEST: harasani/fastapi:latest
   CONTAINER_NAME: fastapi
-  VERSION_BUMP: minor  # bump version (patch / minor / major)
+  VERSION_BUMP: patch  # bump version (patch / minor / major)
 
 .build_template:
   image: docker:28.4.0
@@ -116,12 +116,17 @@ create_git_tag:
   script:
     - |
       BUMP="${VERSION_BUMP:-patch}"
-      NEW_VERSION=$(bump2version $BUMP --dry-run --list | grep new_version | sed 's/new_version=//')
+      NEW_VERSION=$(bump2version $BUMP --dry-run --list | \
+                    grep new_version | sed 's/new_version=//')
       echo "NEW_VERSION=$NEW_VERSION" | tee -a variables.env
     - |
-      bump2version $BUMP --commit --tag --message "Bump version: {current_version} → {new_version}"
+      bump2version $BUMP --commit --tag \
+          --message "Bump version: {current_version} → {new_version}"
     - |
-      git push https://gitlab-ci-token:${GITLAB_TOKEN}@gitlab.com/${CI_PROJECT_PATH}.git --tags
+      CI_PATH=$CI_PROJECT_PATH
+      git push \
+          https://gitlab-ci-token:${GITLAB_TOKEN}@gitlab.com/${CI_PATH}.git \
+          --tags
   artifacts:
     reports:
       dotenv: variables.env
@@ -140,10 +145,11 @@ push-docker-image:
     DOCKER_REG: $DOCKER_REG
     DOCKER_REG_USER: $DOCKER_HUB_USERNAME
     DOCKER_REG_PASS: $DOCKER_HUB_ACCESS_TOKEN
-    DOCKER_IMAGE: $DOCKER_REG/$DOCKER_HUB_IMAGE:$NEW_VERSION
+    DOCKER_IMAGE: $DOCKER_REG/$DOCKER_HUB_IMAGE:$CI_COMMIT_TAG
     DOCKER_LATEST: $DOCKER_REG/$DOCKER_HUB_LATEST
   after_script:
     - echo "Pushed $DOCKER_IMAGE image on $DOCKER_REG docker registry"
+
 
 # deploy_prod:
 #  stage: deploy
