@@ -110,8 +110,10 @@ test-integration:
     - docker exec -i $CONTAINER_NAME curl --fail http://localhost:8000/
 
 create-tag-and-push-docker:
-  image: docker:28.4.0
+  image: python:3.11-alpine
   stage: release
+  services:
+    - docker:28.4.0-dind
   needs:
     - test-integration
   rules:
@@ -124,7 +126,7 @@ create-tag-and-push-docker:
     DOCKER_REG_PASS: $DOCKER_HUB_ACCESS_TOKEN
     GITLAB_TOKEN: $GITLAB_FASTAPI_ACCESS_TOKEN
   before_script:
-    - apk add --no-cache git python3 py3-pip bash
+    - apk add --no-cache git
     - pip install bump2version
     - git config --global user.name "$GITLAB_USER_LOGIN"
     - git config --global user.email "$GITLAB_USER_EMAIL"
