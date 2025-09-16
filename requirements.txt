@@ -8,6 +8,7 @@ bump2version==1.0.1
 certifi==2025.8.3
 cffi==2.0.0
 click==8.2.1
+coverage==7.10.6
 dill==0.4.0
 dnspython==2.8.0
 ecdsa==0.19.1
@@ -44,6 +45,7 @@ pydantic_core==2.33.2
 Pygments==2.19.2
 pylint==3.3.8
 pytest==8.4.2
+pytest-cov==7.0.0
 pytest-mypy==1.0.1
 pytest-sugar==1.1.1
 python-dotenv==1.1.1
