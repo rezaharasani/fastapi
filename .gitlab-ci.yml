@@ -109,62 +109,47 @@ test-integration:
     - docker compose -f docker-compose-prod.yml ps -a
     - docker exec -i $CONTAINER_NAME curl --fail http://localhost:8000/
 
-create-git-tag:
-  image: python:3.11-slim
+create-tag-and-push-docker:
+  image: docker:28.4.0
   stage: release
   needs:
     - test-integration
   rules:
-    - if: >
-        $CI_PIPELINE_SOURCE == "push" &&
-        $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH &&
-        $CI_COMMIT_MESSAGE =~ /Merge branch.*/
-    - when: never
-  environment: release
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   variables:
+    VERSION_BUMP: patch  # patch / minor / major
+    DOCKER_REGISTRY: docker.io
+    DOCKER_REPO: harasani/fastapi
+    DOCKER_REG_USER: $DOCKER_HUB_USERNAME
+    DOCKER_REG_PASS: $DOCKER_HUB_ACCESS_TOKEN
     GITLAB_TOKEN: $GITLAB_FASTAPI_ACCESS_TOKEN
   before_script:
-    - apt update -qq
-    - apt install -y git -qqq
-    - pip install --upgrade pip
+    - apk add --no-cache git python3 py3-pip bash
     - pip install bump2version
     - git config --global user.name "$GITLAB_USER_LOGIN"
     - git config --global user.email "$GITLAB_USER_EMAIL"
     - git fetch --tags
+    - |
+       echo $DOCKER_REG_PASS | \
+            docker login -u $DOCKER_REG_USER --password-stdin $DOCKER_REG
   script:
     - |
       BUMP="${VERSION_BUMP:-patch}"
-      NEW_VERSION=$(bump2version $BUMP --dry-run --list | \
+      NEW_VERSION=$(bump2version $BUMP --dry-run --list | 
                     grep new_version | sed 's/new_version=//')
-      echo "NEW_VERSION=$NEW_VERSION" | tee -a variables.env
+      echo "New version: $NEW_VERSION"
     - |
-      bump2version $BUMP --commit --tag \
-          --message "Release version: {current_version} → {new_version} [skip ci]"
+      bump2version $BUMP --commit --tag --message "Release {current_version} → {new_version} [skip ci]"
+      git push https://gitlab-ci-token:${GITLAB_TOKEN}@gitlab.com/${CI_PROJECT_PATH}.git --tags
     - |
-      CI_PATH=$CI_PROJECT_PATH
-      git push \
-          https://gitlab-ci-token:${GITLAB_TOKEN}@gitlab.com/${CI_PATH}.git \
-          --tags
-  artifacts:
-    reports:
-      dotenv: variables.env
-
-push-docker-image:
-  extends: .build_template
-  stage: release
-  needs:
-    - create-git-tag
-  rules:
-    - if: $CI_COMMIT_TAG && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - when: never
-  variables:
-    DOCKER_REG: $DOCKER_REGISTRY
-    DOCKER_REG_USER: $DOCKER_HUB_USERNAME
-    DOCKER_REG_PASS: $DOCKER_HUB_ACCESS_TOKEN
-    DOCKER_REP_IMAGE: $DOCKER_IMAGE
-    DOCKER_REP_LATEST: $DOCKER_LATEST
+      export DOCKER_REP_IMAGE=$DOCKER_REGISTRY/$DOCKER_REPO:$NEW_VERSION
+      export DOCKER_REP_LATEST=$DOCKER_REGISTRY/$DOCKER_REPO:latest
+    - |
+      docker build -t $DOCKER_REP_IMAGE -t $DOCKER_REP_LATEST .
+    - docker push $DOCKER_REP_IMAGE
+    - docker push $DOCKER_REP_LATEST
   after_script:
-    - echo "Pushed $DOCKER_IMAGE image on $DOCKER_REG docker registry"
+    - echo "✅ Released version $NEW_VERSION and pushed Docker image to $DOCKER_REGISTRY/$DOCKER_REPO"
 
 # deploy_prod:
 #  stage: deploy
