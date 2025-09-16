@@ -2,9 +2,7 @@
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: always
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      when: always
     - when: never
 
 stages:
@@ -15,9 +13,13 @@ stages:
 variables:
   GITLAB_DOCKER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   GITLAB_DOCKER_LATEST: $CI_REGISTRY_IMAGE:latest
+
   DOCKER_REGISTRY: docker.io
-  DOCKER_HUB_IMAGE: harasani/fastapi
-  DOCKER_HUB_LATEST: harasani/fastapi:latest
+  DOCKER_REPO: harasani/fastapi
+  DOCKER_VERSION: $CI_COMMIT_TAG
+  DOCKER_IMAGE: $DOCKER_REGISTRY/$DOCKER_REPO:$DOCKER_VERSION
+  DOCKER_LATEST: $DOCKER_REGISTRY/$DOCKER_REPO:latest
+
   CONTAINER_NAME: fastapi
   VERSION_BUMP: patch  # bump version (patch / minor / major)
 
@@ -30,16 +32,16 @@ variables:
     DOCKER_REG: ''
     DOCKER_REG_USER: ''
     DOCKER_REG_PASS: ''
-    DOCKER_IMAGE: ''
-    DOCKER_LATEST: ''
+    DOCKER_REP_IMAGE: ''
+    DOCKER_REP_LATEST: ''
   before_script:
     - |
       echo $DOCKER_REG_PASS | \
             docker login -u $DOCKER_REG_USER --password-stdin $DOCKER_REG
   script:
-    - docker build -t $DOCKER_IMAGE -t $DOCKER_LATEST .
-    - docker push $DOCKER_IMAGE
-    - docker push $DOCKER_LATEST
+    - docker build -t $DOCKER_REP_IMAGE -t $DOCKER_REP_LATEST .
+    - docker push $DOCKER_REP_IMAGE
+    - docker push $DOCKER_REP_LATEST
 
 .test_template:
   stage: test
@@ -51,12 +53,12 @@ variables:
     DOCKER_REG: $CI_REGISTRY
     DOCKER_REG_USER: $CI_REGISTRY_USER
     DOCKER_REG_PASS: $CI_REGISTRY_PASSWORD
-    DOCKER_IMAGE: $GITLAB_DOCKER_IMAGE
+    DOCKER_REP_IMAGE: $GITLAB_DOCKER_IMAGE
   before_script:
     - apk add curl jq
     - docker login $DOCKER_REG -u $DOCKER_REG_USER -p $DOCKER_REG_PASS
-    - docker pull $DOCKER_IMAGE
-    - export PROJECT_IMAGE_NAME=$DOCKER_IMAGE
+    - docker pull $DOCKER_REP_IMAGE
+    - export PROJECT_IMAGE_NAME=$DOCKER_REP_IMAGE
     - docker compose -f docker-compose-prod.yml up -d
     - docker compose -f docker-compose-prod.yml ps -a
   script:
@@ -68,8 +70,8 @@ build-docker-image:
     DOCKER_REG: $CI_REGISTRY
     DOCKER_REG_USER: $CI_REGISTRY_USER
     DOCKER_REG_PASS: $CI_REGISTRY_PASSWORD
-    DOCKER_IMAGE: $GITLAB_DOCKER_IMAGE
-    DOCKER_LATEST: $GITLAB_DOCKER_LATEST
+    DOCKER_REP_IMAGE: $GITLAB_DOCKER_IMAGE
+    DOCKER_REP_LATEST: $GITLAB_DOCKER_LATEST
 
 test-code-lint:
   extends: .test_template
@@ -113,8 +115,10 @@ create-git-tag:
   needs:
     - test-integration
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - when: on_success
+    - if: >
+        $CI_PIPELINE_SOURCE == "push" &&
+        $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH &&
+        $CI_COMMIT_MESSAGE =~ /Merge branch.*/
     - when: never
   environment: release
   variables:
@@ -135,7 +139,7 @@ create-git-tag:
       echo "NEW_VERSION=$NEW_VERSION" | tee -a variables.env
     - |
       bump2version $BUMP --commit --tag \
-          --message "release version: {current_version} → {new_version} [skip ci]"
+          --message "Release version: {current_version} → {new_version} [skip ci]"
     - |
       CI_PATH=$CI_PROJECT_PATH
       git push \
@@ -151,16 +155,14 @@ push-docker-image:
   needs:
     - create-git-tag
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      when: on_success
+    - if: $CI_COMMIT_TAG && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - when: never
-  environment: release
   variables:
     DOCKER_REG: $DOCKER_REGISTRY
     DOCKER_REG_USER: $DOCKER_HUB_USERNAME
     DOCKER_REG_PASS: $DOCKER_HUB_ACCESS_TOKEN
-    DOCKER_IMAGE: $DOCKER_REGISTRY/$DOCKER_HUB_IMAGE:$CI_COMMIT_TAG
-    DOCKER_LATEST: $DOCKER_REGISTRY/$DOCKER_HUB_LATEST
+    DOCKER_REP_IMAGE: $DOCKER_IMAGE
+    DOCKER_REP_LATEST: $DOCKER_LATEST
   after_script:
     - echo "Pushed $DOCKER_IMAGE image on $DOCKER_REG docker registry"
 
