@@ -6,8 +6,9 @@ workflow:
     - when: never
 
 stages:
-   - .pre
-   - release
+  - .pre
+  - release
+  - deploy
   #  - build
   #  - test
   #  - review
@@ -159,6 +160,7 @@ release:
   #    - test-integration
   #  rules:
   #    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  environment: release
   variables:
     DOCKER_REGISTRY: docker.io
     DOCKER_REPO: harasani/fastapi
@@ -193,14 +195,14 @@ release:
       docker push $DOCKER_IMAGE:gl-$NEW_VERSION
       docker push $DOCKER_IMAGE:gl-latest
 
-# deploy_prod:
-#  stage: deploy
-#  needs:
-#    - push-docker-image
-#  rules:
-#    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-#      when: on_success
-#    - when: never
-#  environment: production
-#  script:
-#    - curl https://api.render.com/deploy/${{ env.RENDER_HOOK }}
+deploy:
+  image: alpine:3.22
+  stage: deploy
+  needs:
+    - release
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - when: never
+  environment: production
+  script:
+    - curl $RENDER_DEPLOY_HOOK
