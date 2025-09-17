@@ -30,18 +30,25 @@ check-mergeable:
   before_script:
     - apk add --no-cache jq curl
   script: |
-    echo "🔍 Checking MR mergeability..."
-    MR_INFO=$(curl --silent --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" \
-      "$CI_API_V4_URL/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID")
+    for i in {1..5}; do
+      echo "🔍 Checking MR mergeability..."
+      MR_INFO=$(curl --silent --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" \
+        "$CI_API_V4_URL/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID")
+  
+      MERGE_STATUS=$(echo "$MR_INFO" | jq -r '.merge_status')
+      echo "Merge status: $MERGE_STATUS"
+  
+      if [ "$MERGE_STATUS" = "can_be_merged" ]; then
+        echo "✅ Merge request is mergeable"
+        exit 0
+      elif [ "$MERGE_STATUS" = "cannot_be_merged" ]; then
+        echo "❌ Merge request is not mergeable"
+        exit 1
+      fi
 
-    MERGE_STATUS=$(echo "$MR_INFO" | jq -r '.merge_status')
-    echo "Merge status: $MERGE_STATUS"
-
-    if [ "$MERGE_STATUS" != "can_be_merged" ]; then
-      echo "❌ Merge request is not mergeable (conflicts or blocked)."
-      exit 1
-    fi
-    echo "✅ Merge request is mergeable. Continuing..."
+      echo "⏳ Still checking, retrying in 5s..."
+      sleep 5
+    done
 
 .build_template:
   image: docker:28.4.0
