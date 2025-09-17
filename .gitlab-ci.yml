@@ -175,8 +175,7 @@ create-tag-and-push-docker:
     - |
       bump2version $BUMP --commit --tag \
               --message "Release {current_version} → {new_version} [skip ci]"
-      GITLAB_URL=gitlab-ci-token:${GITLAB_TOKEN}@gitlab.com
-      git push https://${GITLAB_URL}/${CI_PROJECT_PATH}.git --tags
+      git push https://gitlab-ci-token:${GITLAB_TOKEN}@gitlab.com/${CI_PROJECT_PATH}.git --tags
     - |
       export DOCKER_REP_IMAGE=$DOCKER_REGISTRY/$DOCKER_REPO:$NEW_VERSION
       export DOCKER_REP_LATEST=$DOCKER_REGISTRY/$DOCKER_REPO:latest
@@ -187,11 +186,10 @@ create-tag-and-push-docker:
     - export STAGE_COMPLETED="true"
   after_script:
     - |
-      if [[ $STAGE_COMPLETED == "true" ]]; then
-        echo "✅ Released version $NEW_VERSION and pushed image to Docker Hub"
-      else
-        echo "❌ Releasing stage is not completed."
+      if [[ $STAGE_COMPLETED == "false" ]]; then
+          echo "❌ Releasing stage is not completed."
       fi
+      echo "✅ Released version $NEW_VERSION and pushed image to Docker Hub"
 
 # deploy_prod:
 #  stage: deploy
