@@ -6,6 +6,7 @@ workflow:
     - when: never
 
 stages:
+  - .pre
   - build
   - test
   - release
@@ -13,15 +14,34 @@ stages:
 variables:
   GITLAB_DOCKER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   GITLAB_DOCKER_LATEST: $CI_REGISTRY_IMAGE:latest
-
   DOCKER_REGISTRY: docker.io
   DOCKER_REPO: harasani/fastapi
   DOCKER_VERSION: $CI_COMMIT_TAG
   DOCKER_IMAGE: $DOCKER_REGISTRY/$DOCKER_REPO:$DOCKER_VERSION
   DOCKER_LATEST: $DOCKER_REGISTRY/$DOCKER_REPO:latest
-
   CONTAINER_NAME: fastapi
   VERSION_BUMP: patch  # bump version (patch / minor / major)
+
+check-mergeable:
+  stage: .pre
+  image: alpine:3.22
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  before_script:
+    - apk add --no-cache jq curl
+  script: |
+    echo "🔍 Checking MR mergeability..."
+    MR_INFO=$(curl --silent --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" \
+      "$CI_API_V4_URL/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID")
+
+    MERGE_STATUS=$(echo "$MR_INFO" | jq -r '.merge_status')
+    echo "Merge status: $MERGE_STATUS"
+
+    if [ "$MERGE_STATUS" != "can_be_merged" ]; then
+      echo "❌ Merge request is not mergeable (conflicts or blocked)."
+      exit 1
+    fi
+    echo "✅ Merge request is mergeable. Continuing..."
 
 .build_template:
   image: docker:28.4.0
@@ -37,15 +57,16 @@ variables:
   before_script:
     - |
       echo $DOCKER_REG_PASS | \
-            docker login -u $DOCKER_REG_USER --password-stdin $DOCKER_REG
-  script:
+           docker login -u $DOCKER_REG_USER --password-stdin $DOCKER_REG
     - docker build -t $DOCKER_REP_IMAGE -t $DOCKER_REP_LATEST .
     - docker push $DOCKER_REP_IMAGE
     - docker push $DOCKER_REP_LATEST
+  script:
+    - echo "Put your code here."
 
 .test_template:
-  stage: test
   image: docker:28.4.0
+  stage: test
   services:
     - docker:28.4.0-dind
   environment: test
@@ -55,8 +76,10 @@ variables:
     DOCKER_REG_PASS: $CI_REGISTRY_PASSWORD
     DOCKER_REP_IMAGE: $GITLAB_DOCKER_IMAGE
   before_script:
-    - apk add curl jq
-    - docker login $DOCKER_REG -u $DOCKER_REG_USER -p $DOCKER_REG_PASS
+    - apk add curl jq tree
+    - |
+      echo $DOCKER_REG_PASS | \
+           docker login -u $DOCKER_REG_USER --password-stdin $DOCKER_REG
     - docker pull $DOCKER_REP_IMAGE
     - export PROJECT_IMAGE_NAME=$DOCKER_REP_IMAGE
     - docker compose -f docker-compose-prod.yml up -d
@@ -88,16 +111,22 @@ test-units:
   script:
     - |
       docker exec -i $CONTAINER_NAME pytest \
+        --junitxml=reports/junit.xml \
         --cov=app \
-        --cov-report=xml:/tmp/coverage.xml \
-        --cov-report=term-missing \
-        -v --disable-warnings
-    - docker cp $CONTAINER_NAME:/tmp/coverage.xml coverage.xml
+        --cov-report=xml:reports/coverage.xml \
+        --cov-report=html:reports/htmlcov \
+        --cov-report=term \
+          -v --disable-warnings
+    - docker cp $CONTAINER_NAME:/code/reports ./reports
   artifacts:
+    paths:
+      - reports
     reports:
+      junit: reports/junit.xml
       coverage_report:
         coverage_format: cobertura
-        path: coverage.xml
+        path: reports/coverage.xml
+    expire_in: 1 week
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
 
 test-integration:
@@ -110,7 +139,7 @@ test-integration:
     - docker exec -i $CONTAINER_NAME curl --fail http://localhost:8000/
 
 create-tag-and-push-docker:
-  image: python:3.11-alpine
+  image: docker:28.4.0
   stage: release
   services:
     - docker:28.4.0-dind
@@ -126,18 +155,18 @@ create-tag-and-push-docker:
     DOCKER_REG_PASS: $DOCKER_HUB_ACCESS_TOKEN
     GITLAB_TOKEN: $GITLAB_FASTAPI_ACCESS_TOKEN
   before_script:
-    - apk add --no-cache git
+    - apk add --no-cache git python3 py3-pip bash
     - pip install bump2version
     - git config --global user.name "$GITLAB_USER_LOGIN"
     - git config --global user.email "$GITLAB_USER_EMAIL"
     - git fetch --tags
     - |
-       echo $DOCKER_REG_PASS | \
-            docker login -u $DOCKER_REG_USER --password-stdin $DOCKER_REG
+      echo $DOCKER_REG_PASS | \
+           docker login -u $DOCKER_REG_USER --password-stdin $DOCKER_REG
   script:
     - |
       BUMP="${VERSION_BUMP:-patch}"
-      NEW_VERSION=$(bump2version $BUMP --dry-run --list | 
+      NEW_VERSION=$(bump2version $BUMP --dry-run --list |
                     grep new_version | sed 's/new_version=//')
       echo "New version: $NEW_VERSION"
     - |
