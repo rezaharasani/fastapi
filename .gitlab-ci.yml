@@ -154,9 +154,12 @@ create-tag-and-push-docker:
     DOCKER_REG_USER: $DOCKER_HUB_USERNAME
     DOCKER_REG_PASS: $DOCKER_HUB_ACCESS_TOKEN
     GITLAB_TOKEN: $GITLAB_FASTAPI_ACCESS_TOKEN
+    STAGE_COMPLETED: "false"
   before_script:
-    - apk add --no-cache git python3 py3-pip bash
-    - pip install bump2version
+    - apk add --no-cache git python3 py3-pip
+    - python3 -m venv /venv
+    - . /venv/bin/activate
+    - pip install --no-cache-dir bump2version
     - git config --global user.name "$GITLAB_USER_LOGIN"
     - git config --global user.email "$GITLAB_USER_EMAIL"
     - git fetch --tags
@@ -170,8 +173,10 @@ create-tag-and-push-docker:
                     grep new_version | sed 's/new_version=//')
       echo "New version: $NEW_VERSION"
     - |
-      bump2version $BUMP --commit --tag --message "Release {current_version} → {new_version} [skip ci]"
-      git push https://gitlab-ci-token:${GITLAB_TOKEN}@gitlab.com/${CI_PROJECT_PATH}.git --tags
+      bump2version $BUMP --commit --tag \
+              --message "Release {current_version} → {new_version} [skip ci]"
+      GITLAB_URL=gitlab-ci-token:${GITLAB_TOKEN}@gitlab.com
+      git push https://${GITLAB_URL}/${CI_PROJECT_PATH}.git --tags
     - |
       export DOCKER_REP_IMAGE=$DOCKER_REGISTRY/$DOCKER_REPO:$NEW_VERSION
       export DOCKER_REP_LATEST=$DOCKER_REGISTRY/$DOCKER_REPO:latest
@@ -179,8 +184,14 @@ create-tag-and-push-docker:
       docker build -t $DOCKER_REP_IMAGE -t $DOCKER_REP_LATEST .
     - docker push $DOCKER_REP_IMAGE
     - docker push $DOCKER_REP_LATEST
+    - export STAGE_COMPLETED="true"
   after_script:
-    - echo "✅ Released version $NEW_VERSION and pushed Docker image to $DOCKER_REGISTRY/$DOCKER_REPO"
+    - |
+      if [[ $STAGE_COMPLETED == "true" ]]; then
+        echo "✅ Released version $NEW_VERSION and pushed image to Docker Hub"
+      else
+        echo "❌ Releasing stage is not completed."
+      fi
 
 # deploy_prod:
 #  stage: deploy
