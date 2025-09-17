@@ -19,7 +19,7 @@ variables:
   DOCKER_REPO: harasani/fastapi
   DOCKER_IMAGE: $DOCKER_REGISTRY/$DOCKER_REPO
   CONTAINER_NAME: fastapi
-  VERSION_BUMP: patch  # bump version (patch / minor / major)
+  VERSION_BUMP: minor  # bump version (patch / minor / major)
 
 check-mergeable:
   stage: .pre
