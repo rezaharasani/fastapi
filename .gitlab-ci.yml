@@ -148,7 +148,7 @@ create-tag-and-push-docker:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   variables:
-    VERSION_BUMP: patch  # patch / minor / major
+    VERSION_BUMP: patch  # patch/minor/major
     DOCKER_REGISTRY: docker.io
     DOCKER_REPO: harasani/fastapi
     DOCKER_REG_USER: $DOCKER_HUB_USERNAME
