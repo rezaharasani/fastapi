@@ -18,6 +18,8 @@ services:
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
     ports:
       - "8000:8000"
+    volumes:
+      - ./public:/code/public
     healthcheck:
       test: curl --fail http://localhost:8000/health || exit 1
       interval: 2s

@@ -189,3 +189,4 @@ mypy.ini
 dev.env
 prod.env
 test.env
+.env
