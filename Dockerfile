@@ -35,18 +35,18 @@ RUN pip install --upgrade pip && \
 
 
 FROM base AS dev
-COPY . .
+COPY ../ .
 RUN pip install watchfiles debugpy
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
 
 FROM base AS test
-COPY . .
+COPY ../ .
 CMD ["pytest", "--maxfail=1", "--disable-warnings", "-q"]
 
 
 FROM base AS prod
-COPY . .
+COPY ../ .
 RUN useradd -m fastapiuser
 USER fastapiuser
 CMD ["gunicorn", "app.main:app", "-k", "uvicorn.workers.UvicornWorker", "-w", "4", "-b", "0.0.0.0:8000"]

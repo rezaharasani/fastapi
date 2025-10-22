@@ -21,30 +21,64 @@ This project is my first python and fastapi program that consists of following t
 ✓ Nginx  
 ✓ Pytest
 
-### To run and setup this project, run the following commands in your terminal:
 
-Clone the project into your path:
+## How to setup on lcoal environment
 
-```bazaar
-git clone https://gitlab.com/harasani-gitops/fastapi.git
-```
-
-Then, change directory in to project folder:
+In order to use, clone the project into your path:
 
 ```bazaar
-cd fastapi/
+git clone https://github.com/rezaharasani/fastapi.git /your/path/project/fastapi
 ```
 
-Finally, run `docker compose` command into related directory. Note that this project includes
-two docker compose files. One for development environment, and the another one for production.
-So, for testing this project in your local environment, you can the followng command:
+Then, change into current cloned project directory path:
 
 ```bazaar
-docker compose -f docker-compose-dev.yml up -d
+cd /your/path/project/fastapi
 ```
 
-After runing this command, you can see our service on `http://127.0.0.1:8000` address. If you want
-to see docs section, you can put `/docs` at the end of above address to see docs Swagger page.
+Run `docker compose` command into the `root` directory.
+```shell
+docker compose \
+    -f composes/docker-compose.yml \
+    -f composes/docker-compose-dev.yml \
+    --env-file environments/.env.dev up -d
+```
+
+The above docker compose command runs the fastapi service and also postgresql database in `dev` environments. Therefore,
+it helps you to continue your programming alongside real containerized infrastructure.
+
+As you see, in the project, we divived composes into three seprate files, for each environment. These files can help 
+developr to develop, test, and prepare for production environment.
+
+ 
+However, you can use the following docker compose commands to run our services in specific environments:
+
+🧪 for `Testing`:
+```shell
+docker compose \
+    -f composes/docker-compose.yml \
+    -f composes/docker-compose.test.yml \
+    --env-file environments/.env.test \
+    up --abort-on-container-exit
+```
+
+🚀 for `production`:
+```shell
+docker compose  \
+    -f composes/docker-compose.yml \
+    -f composes/docker-compose.prod.yml \
+    --env-file environments/.env.prod up -d
+```
+
+**Note:** The above commands are usually used in set-up dockerized services in a simpler and smaller environments.
+Therefore, for grater and real world deployments, we usually use kubernetes and some related tools and infrastructures
+to deploy on production. That methods are more complicated and needs more resources and time to deploy. So, untill
+now, we just explain an easy and fast deployment for small project. In continue, we will try to represent a real world
+production environments and introduce more tools and complicated configs to deploy a kubernetes based deployment.
+
+
+After runing the above command, you can see our service on `http://127.0.0.1:8000` url. If you want to see docs 
+section, you can put `/docs` at the end of above address to see docs Swagger page.
 
 **Notice**: Before doing anything, set the following variables, as you want to be on your server.
 In below, we put some default values to know how to set appropriate values for these variables:

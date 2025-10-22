@@ -2,13 +2,29 @@ services:
   fastapi:
     build:
       target: dev
+    image: fast
     env_file:
-      - .env.dev
+      - ../environments/.env.dev
     environment:
-      - ENVIRONMENT=development
+      ENVIRONMENT: development
+      POSTGRES_SERVER: ${POSTGRES_SERVER}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      ALGORITHM: ${ALGORITHM}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
     volumes:
-      - .:/app
+      - .:/code
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-  db:
+
+  postgres:
     env_file:
-      - .env.dev
+      - ../environments/.env.dev
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5454:5432"

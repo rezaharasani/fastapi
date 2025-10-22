@@ -2,7 +2,6 @@ from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 
 from . import models
-from .config import settings
 from .database import engine
 from .routers import user, post, auth, vote
 
@@ -10,8 +9,7 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="FastAPI",
-    description=f"Python and FastAPI Project in {settings.ENVIRONMENT.title()} Mode",
-    version=f"{settings.PROJECT_VERSION}",
+    description="Python and FastAPI Project",
 )
 
 app.add_middleware(
