@@ -1,7 +1,7 @@
 .pytest_cache
 .venv/
 migrations/
-Dockerfile
+Dockerfile.bk
 docker-compose-prod.yml
 LICENSE
 README.md

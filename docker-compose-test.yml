@@ -1,0 +1,15 @@
+services:
+  fastapi:
+    build:
+      target: test
+    env_file:
+      - .env.test
+    environment:
+      - ENVIRONMENT=test
+    depends_on:
+      db:
+        condition: service_healthy
+    command: pytest -q
+  db:
+    env_file:
+      - .env.test

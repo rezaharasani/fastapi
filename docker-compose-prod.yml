@@ -1,55 +1,15 @@
----
 services:
-
   fastapi:
-    image: ${PROJECT_IMAGE_NAME}
-    container_name: fastapi
-    restart: unless-stopped
+    build:
+      target: prod
     env_file:
-      - ./.env
+      - .env.prod
     environment:
-      - POSTGRES_SERVER=${POSTGRES_SERVER}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - SECRET_KEY=${SECRET_KEY}
-      - ALGORITHM=${ALGORITHM}
-      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./public:/code/public
-    healthcheck:
-      test: curl --fail http://localhost:8000/health || exit 1
-      interval: 2s
-      timeout: 5s
-      retries: 3
-      start_period: 5s
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  postgres:
-    image: postgres:17.5-alpine
-    container_name: postgres
-    restart: unless-stopped
+      - ENVIRONMENT=production
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+  db:
     env_file:
-      - ./.env
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    ports:
-      - "5454:5432"
-    volumes:
-      - postgres-db:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
-      interval: 10s
-      retries: 5
-      start_period: 30s
-      timeout: 10s
-
-volumes:
-  postgres-db:
+      - .env.prod
