@@ -77,3 +77,4 @@ uvloop==0.21.0
 watchfiles==1.1.0
 websockets==15.0.1
 yamllint==1.37.1
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
